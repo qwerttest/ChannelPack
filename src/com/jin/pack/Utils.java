@@ -1,5 +1,6 @@
 package com.jin.pack;
 
+import java.awt.Desktop;
 import java.io.File;
 
 public class Utils {
@@ -28,20 +29,11 @@ public class Utils {
         if (!file.exists()) {  
             return;  
         }  
-        Runtime runtime = null;  
+        Desktop desktop = Desktop.getDesktop();
         try {  
-            runtime = Runtime.getRuntime();  
-//            if (SystemHWUtil.isWindows) {  
-//                runtime.exec("cmd /c start explorer " + file.getAbsolutePath());  
-//            } else {  
-                runtime.exec("nautilus " + folderPath);  
-//            }  
+        	desktop.open(file);
         } catch (Exception ex) {  
             ex.printStackTrace();  
-        } finally {  
-            if (null != runtime) {  
-                runtime.runFinalization();  
-            }  
-        }  
+        } 
     }  
 }
