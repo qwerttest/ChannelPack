@@ -39,6 +39,7 @@ public class PackWindow extends JFrame{
 	JMenuBar menuBar;
 	JMenu menuSettings;
 	JMenuItem itemOutPathItem;
+	JMenuItem itemPackForInputItem;
 	private JTextArea consoleArea;
 	
 	private String baseFilePath;//基础包路径
@@ -49,7 +50,7 @@ public class PackWindow extends JFrame{
 		setBackground(Color.WHITE);
 		setLayout(new GridLayout(6, 1));
 		setTitle(title);
-//		initMenu();
+		initMenu();
 		setLocation(x, y);
 		setSize(w, h);
 		setVisible(true);
@@ -64,7 +65,7 @@ public class PackWindow extends JFrame{
 	void initMenu() {
 		menuBar = new JMenuBar();
 		menuSettings = new JMenu("设置");
-		itemOutPathItem = new JMenuItem("设置文件输出目录");
+		itemOutPathItem = new JMenuItem("查看apk渠道");
 		itemOutPathItem.addActionListener(new ActionListener() {
 			
 			@Override
@@ -85,6 +86,15 @@ public class PackWindow extends JFrame{
 		
 		menuSettings.add(itemOutPathItem);
 		
+		itemPackForInputItem = new JMenuItem("手动输入渠道");
+		itemPackForInputItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		menuSettings.add(itemPackForInputItem);
 		menuBar.add(menuSettings);
 		setJMenuBar(menuBar);
 	}
