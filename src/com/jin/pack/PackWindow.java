@@ -310,17 +310,13 @@ public class PackWindow extends JFrame{
 				}
 				
 				if(Utils.isEmptyText(outputPath)) {
-					outputPath = new File(baseFilePath).getParentFile().getAbsolutePath() + File.pathSeparator + "output";
+					outputPath = new File(baseFilePath).getParentFile().getAbsolutePath() + File.separator + "output";
 				}
 				append("打包开始.......");
 				append("基础包目录为：" + baseFilePath);
 				append("输出路径为：" + outputPath);
-//				String wallString = "/Users/mac/Desktop/pack/pack2/walle-cli-all.jar";
-//				String wallString = this.getClass().getResource("/walle-cli-all.jar").getPath();
-				String runPathString = PackWindow.this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-				runPathString = new File(runPathString).getParentFile().getAbsolutePath();
-				String wallString = runPathString + "/resources/walle-cli-all.jar";
-				append("工具地址为：" + runPathString);
+				String wallString = getWallePath();
+				append("工具地址为：" + wallString);
 				// Java调用 dos命令
 		        String cmd = "java -jar " + wallString + " batch -f " + channelFilePath + " " + baseFilePath + " " + outputPath;
 		        try {
@@ -336,7 +332,10 @@ public class PackWindow extends JFrame{
 		                append(content);
 		            }
 		            targetPathTvArea.setEnabled(true);
-		            append("打包完成\n");
+		            append("打包完成......\n");
+		            
+		            checkChannelInfo();
+		            
 		            showOpenDialog();
 		        } catch (IOException e1) {
 		            e1.printStackTrace();
@@ -373,5 +372,48 @@ public class PackWindow extends JFrame{
 	void append(String msg) {
 		consoleArea.append(msg);
 		consoleArea.append("\n");
+	}
+	
+	void checkChannelInfo() {
+		File outD = new File(outputPath);
+		if(!outD.exists()) {
+			showMessageDialog("文件不存在");
+			return;
+		}
+        File[] outList = outD.listFiles();
+        String runPathString = getWallePath();
+        for(File file : outList) {
+        	exec("java -jar " + runPathString + " show " + file.getAbsolutePath());
+        }
+	}
+	
+	void showMessageDialog(String msg) {
+		JOptionPane.showMessageDialog(this, msg);
+	}
+	
+	void exec(String cmd) {
+		try {
+            Process process = Runtime.getRuntime().exec(cmd);
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String content = br.readLine();
+            while (content != null) {
+                content = br.readLine();
+                append(content);
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            append(e1.getMessage() + "====" + cmd);
+        }
+	}
+	
+	String getWallePath() {
+//		String wallString = "/Users/mac/Desktop/pack/pack2/walle-cli-all.jar";
+//		String runPathString = this.getClass().getResource("/walle-cli-all.jar").getPath();
+		String runPathString = PackWindow.this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+		runPathString = new File(runPathString).getParentFile().getAbsolutePath();
+		String wallString = runPathString + "/resources/walle-cli-all.jar";
+		return wallString;
 	}
 }
