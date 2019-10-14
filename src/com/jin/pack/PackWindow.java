@@ -312,11 +312,17 @@ public class PackWindow extends JFrame{
 				if(Utils.isEmptyText(outputPath)) {
 					outputPath = new File(baseFilePath).getParentFile().getAbsolutePath() + File.pathSeparator + "output";
 				}
-				
-				String wallString = "/Users/mac/Desktop/pack/pack2/walle-cli-all.jar";
+				append("打包开始.......");
+				append("基础包目录为：" + baseFilePath);
+				append("输出路径为：" + outputPath);
+//				String wallString = "/Users/mac/Desktop/pack/pack2/walle-cli-all.jar";
+//				String wallString = this.getClass().getResource("/walle-cli-all.jar").getPath();
+				String runPathString = PackWindow.this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+				runPathString = new File(runPathString).getParentFile().getAbsolutePath();
+				String wallString = runPathString + "/resources/walle-cli-all.jar";
+				append("工具地址为：" + runPathString);
 				// Java调用 dos命令
 		        String cmd = "java -jar " + wallString + " batch -f " + channelFilePath + " " + baseFilePath + " " + outputPath;
-		        
 		        try {
 		        	targetPathTvArea.setEnabled(false);
 		            Process process = Runtime.getRuntime().exec(cmd);
@@ -327,14 +333,14 @@ public class PackWindow extends JFrame{
 		            while (content != null) {
 		                System.out.println(content);
 		                content = br.readLine();
-		                consoleArea.append(content);
+		                append(content);
 		            }
 		            targetPathTvArea.setEnabled(true);
-		            consoleArea.append("打包完成\n");
+		            append("打包完成\n");
 		            showOpenDialog();
 		        } catch (IOException e1) {
 		            e1.printStackTrace();
-		            consoleArea.append(e1.getMessage());
+		            append(e1.getMessage());
 		            targetPathTvArea.setEnabled(true);
 		        }
 			}
@@ -362,5 +368,10 @@ public class PackWindow extends JFrame{
 		JScrollPane pane = new JScrollPane(consoleArea);
 		pane.setBounds(MarginLeft, 360, 400, 300);
 		add(pane);
+	}
+	
+	void append(String msg) {
+		consoleArea.append(msg);
+		consoleArea.append("\n");
 	}
 }
